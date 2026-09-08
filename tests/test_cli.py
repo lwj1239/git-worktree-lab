@@ -37,6 +37,31 @@ def test_unknown_argument(command: str) -> None:
 
 @pytest.mark.parametrize(
     ("text", "expected"),
+    [("", ""), ("Hello", "HELLO"), ("hElLo world", "HELLO WORLD"), ("Straße", "STRASSE")],
+)
+def test_upper(command: str, text: str, expected: str) -> None:
+    result = subprocess.run(
+        [command, "upper", text], capture_output=True, text=True, check=False
+    )
+
+    assert result.returncode == 0
+    assert result.stdout == expected + "\n"
+    assert result.stderr == ""
+
+
+def test_upper_requires_text(command: str) -> None:
+    result = subprocess.run(
+        [command, "upper"], capture_output=True, text=True, check=False
+    )
+
+    assert result.returncode == 2
+    assert "required" in result.stderr
+    assert "text" in result.stderr
+    assert result.stdout == ""
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
     [
         ("hello world", "2"),
         ("", "0"),
