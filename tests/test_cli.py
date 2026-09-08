@@ -33,3 +33,36 @@ def test_unknown_argument(command: str) -> None:
     assert result.returncode == 2
     assert "unrecognized arguments: --unknown" in result.stderr
     assert result.stdout == ""
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("hello world", "2"),
+        ("", "0"),
+        ("hello  world", "2"),
+        ("hello\tworld", "2"),
+        ("hello\nworld", "2"),
+        (" \t\n ", "0"),
+        ("  hello \t world\nagain  ", "3"),
+    ],
+    ids=["basic", "empty", "repeated-space", "tab", "newline", "whitespace-only", "mixed"],
+)
+def test_count(command: str, text: str, expected: str) -> None:
+    result = subprocess.run(
+        [command, "count", text], capture_output=True, text=True, check=False
+    )
+
+    assert result.returncode == 0
+    assert result.stdout == expected + "\n"
+    assert result.stderr == ""
+
+
+def test_count_requires_text(command: str) -> None:
+    result = subprocess.run(
+        [command, "count"], capture_output=True, text=True, check=False
+    )
+
+    assert result.returncode == 2
+    assert "the following arguments are required: text" in result.stderr
+    assert result.stdout == ""
