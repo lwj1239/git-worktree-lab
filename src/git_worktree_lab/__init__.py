@@ -6,8 +6,7 @@ from collections.abc import Sequence
 
 def count_words(text: str) -> int:
     """按空白分隔统计单词数量。"""
-    # 教学故障：仅按空格分隔，故意保留错误以验证 CI 能发现问题。
-    return len(text.split(" "))
+    return len(text.split())
 
 
 def main(argv: Sequence[str] | None = None) -> None:
