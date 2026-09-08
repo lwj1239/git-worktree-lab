@@ -6,7 +6,7 @@
 
 基础程序提供命令入口、帮助信息、pytest 测试和 GitHub Actions CI 配置。功能开发及后续协作环节尚待执行；配置存在不代表流程已验证。
 
-当前功能：帮助信息
+当前功能：帮助信息、大写转换
 
 ## 安装
 
@@ -35,7 +35,14 @@ uv run git-worktree-lab
 uv run git-worktree-lab --help
 ```
 
-两种方式均显示帮助并成功退出，也支持 `-h`。未知参数会报错并以状态码 2 退出。当前尚无文本处理子命令，不需要数据库、Web 服务或部署。
+两种方式均显示帮助并成功退出，也支持 `-h`。未知参数会报错并以状态码 2 退出。不需要数据库、Web 服务或部署。
+
+使用 `upper` 子命令按 Python `str.upper()` 语义转换文本，空字符串输出空行：
+
+```powershell
+uv run git-worktree-lab upper "Hello"
+# 输出：HELLO
+```
 
 ## 检查与测试
 
@@ -45,7 +52,7 @@ uv run ruff check .
 uv run pytest
 ```
 
-测试实际调用安装后的命令入口，覆盖无参数、`--help`、`-h` 和未知参数。
+测试实际调用安装后的命令入口，覆盖无参数、`--help`、`-h`、未知参数，以及大写转换的空字符串、混合大小写、Unicode 转换和缺失文本参数。
 
 GitHub Actions 在指向 `main` 的 PR 和 `main` 的 push 时执行上述三个命令，使用 Python 3.12、uv 0.9.25，仅授予 `contents: read` 权限。本地检查通过后仍需查看对应最新提交的远程 CI 结果。
 
